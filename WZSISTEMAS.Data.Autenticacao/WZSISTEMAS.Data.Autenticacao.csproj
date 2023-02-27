@@ -9,6 +9,9 @@
 		<Title>WZISTEMAS.Data.Autenticacao</Title>
 		<Description>Biblioteca de classes que permite a manipulação dos serviços de autenticação de uma aplicação.</Description>
 		<Copyright>Leonardo Wizenfarde de Oliveira 2023 Todos Direitos Reservados.</Copyright>
+		<RepositoryUrl>https://github.com/leooliveirawo/WZSISTEMAS.Data.Autenticacao</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>autenticação, authentication</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
