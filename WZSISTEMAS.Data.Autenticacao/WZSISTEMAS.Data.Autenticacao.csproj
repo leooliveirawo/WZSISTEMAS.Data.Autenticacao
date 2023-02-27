@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Title>WZISTEMAS.Data.Autenticacao</Title>
+		<Description>Biblioteca de classes que permite a manipulação dos serviços de autenticação de uma aplicação.</Description>
+		<Copyright>Leonardo Wizenfarde de Oliveira 2023 Todos Direitos Reservados.</Copyright>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="WZSISTEMAS.Data.Criptografia" Version="1.0.1" />
+	</ItemGroup>
+
+</Project>
