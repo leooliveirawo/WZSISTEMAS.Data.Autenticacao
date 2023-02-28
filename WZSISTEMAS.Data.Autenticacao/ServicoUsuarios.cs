@@ -56,7 +56,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// Altera o cadastro de um usuário existente.
         /// </summary>
         /// <param name="usuario">Os dados do usuário que será alterado.</param>
-        public void Alterar(TUsuario usuario)
+        public virtual void Alterar(TUsuario usuario)
         {
             if (usuario is null)
                 throw new ArgumentNullException(nameof(usuario));
@@ -81,7 +81,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="usuario">O usuário que a senha será alterado.</param>
         /// <param name="senha">A nova senha do usuário.</param>
-        public void AlterarSenha(TUsuario usuario, string senha)
+        public virtual void AlterarSenha(TUsuario usuario, string senha)
         {
             if (usuario is null)
                 throw new ArgumentNullException(nameof(usuario));
@@ -132,7 +132,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// Exclui um cadastro de usuário que correspondá ao Id especificado.
         /// </summary>
         /// <param name="id">O Id do cadastro do usuário que será excluído.</param>
-        public void Excluir(long id)
+        public virtual void Excluir(long id)
         {
             repositorio.Excluir(id);
         }
@@ -142,7 +142,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="token">O token da autenticação atual.</param>
         /// <returns>O token da nova autenticação.</returns>
-        public string NovaAutenticacao(string token)
+        public virtual string NovaAutenticacao(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 throw new InvalidOperationException("O token não é válido");
@@ -187,7 +187,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
         /// <param name="senha">A senha do usuário ao ser autenticado.</param>
         /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns>
-        public string Autenticar(string nomeUsuario, string senha)
+        public virtual string Autenticar(string nomeUsuario, string senha)
         {
             if (string.IsNullOrWhiteSpace(nomeUsuario))
                 throw new InvalidOperationException("O nome de usuário não foi informado");
@@ -218,7 +218,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="id">O Id do cadastro de usuário que será retornado.</param>
         /// <returns>O cadastro do usuário que correspondá ao Id especificado, ou nulo se não existir.</returns>
-        public TUsuario? ObterPorId(long id)
+        public virtual TUsuario? ObterPorId(long id)
         {
             return repositorio.ObterPorId(id);
         }
@@ -227,7 +227,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// Obtém todos os cadastros dos usuários existem em uma lista simplicada contendo o Id, nome de usuário e e-mail.
         /// </summary>
         /// <returns>Todos os cadastros dos usuários existem em uma lista simplicada contendo o Id, nome de usuário e e-mail.</returns>
-        public IEnumerable<TUsuario> ObterTudo()
+        public virtual IEnumerable<TUsuario> ObterTudo()
         {
             return repositorio.ObterTudo();
         }
@@ -237,7 +237,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="token">O token que será verificado se está autenticado.</param>
         /// <returns>Um valor <see cref="bool"/> representando se o token informado está autenticado.</returns>
-        public bool VerificarAutenticacao(string token)
+        public virtual bool VerificarAutenticacao(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 throw new SecurityException("O token não é válido");
@@ -273,7 +273,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// Verifica se existem cadastros de usuários.
         /// </summary>
         /// <returns>Um valor <see cref="bool"/> representando se existem cadastros de usuários.</returns>
-        public bool VerificarUsuarioExiste()
+        public virtual bool VerificarUsuarioExiste()
         {
             return repositorio.VerificarUsuarioExiste();
         }
