@@ -37,7 +37,7 @@
         /// </summary>
         /// <param name="token">O token da autenticação atual.</param>
         /// <returns>O token da nova autenticação.</returns>
-        string NovaAutenticacao(string token);
+        string? NovaAutenticacao(string token);
 
         /// <summary>
         /// Realiza uma autenticação se o nome de usuário e a senha estiverem corretos.
@@ -45,7 +45,7 @@
         /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
         /// <param name="senha">A senha do usuário ao ser autenticado.</param>
         /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns>
-        string Autenticar(string nomeUsuario, string senha);
+        string? Autenticar(string nomeUsuario, string senha);
 
         /// <summary>
         /// Obtém um cadastro do usuário que correspondá ao Id especificado, ou nulo se não existir.

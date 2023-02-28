@@ -12,10 +12,15 @@
 		<RepositoryUrl>https://github.com/leooliveirawo/WZSISTEMAS.Data.Autenticacao</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>autenticação, authentication</PackageTags>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="WZSISTEMAS.Data.Criptografia" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Exceptions\" />
 	</ItemGroup>
 
 </Project>

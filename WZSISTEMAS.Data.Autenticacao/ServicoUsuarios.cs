@@ -53,25 +53,49 @@ namespace WZSISTEMAS.Data.Autenticacao
         }
 
         /// <summary>
+        /// Gera um novo hash da chave mestre.
+        /// </summary>
+        /// <param name="usuario">Os dados do usuário.</param>
+        /// <returns>O hash da chave mestre.</returns>
+        protected virtual string GerarHashChaveMestre(TUsuario usuario)
+        {
+            return provedorHash.GerarHash($"{DateTime.UtcNow}_{usuario.HashSenha}_{usuario.NomeUsuario}");
+        }
+
+        /// <summary>
+        /// Inicializa uma nova instância da classe <see cref="Token"/>.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário realizado ao <see cref="Token"/>.</param>
+        /// <returns></returns>
+        protected virtual Token CriarToken(string nomeUsuario)
+        {
+            return new Token
+            {
+                NomeUsuario = nomeUsuario,
+                LogadoEm = DateTime.UtcNow,
+                ExpiraEm = DateTime.UtcNow.AddMinutes(15),
+                HashChaveMestre = repositorio.ObterHashChaveMestre(nomeUsuario)
+            };
+        }
+
+        /// <summary>
         /// Altera o cadastro de um usuário existente.
         /// </summary>
         /// <param name="usuario">Os dados do usuário que será alterado.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="usuario"/> é nulo.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.Id"/> de <paramref name="usuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.NomeUsuario"/> de <paramref name="usuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.HashSenha"/> de <paramref name="usuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.HashChaveMestre"/> de <paramref name="usuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.Email"/> de <paramref name="usuario"/> não foi informado.</exception>
         public virtual void Alterar(TUsuario usuario)
         {
-            if (usuario is null)
-                throw new ArgumentNullException(nameof(usuario));
-
-            if (usuario.Id <= 0)
-                throw new InvalidOperationException("O Id do usuário não foi informado");
-
-            if (string.IsNullOrWhiteSpace(usuario.NomeUsuario))
-                throw new InvalidOperationException("O nome de usuário não foi informado");
-
-            if (string.IsNullOrWhiteSpace(usuario.HashSenha))
-                throw new InvalidOperationException("A senha não foi informada");
-
-            if (string.IsNullOrWhiteSpace(usuario.Email))
-                throw new InvalidOperationException("O endereço de e-mail não foi informado");
+            usuario.VerificarNulo(nameof(usuario));
+            usuario.Id.VerificarZeroOuNegativo("O Id do usuário não foi informado", nameof(usuario));
+            usuario.NomeUsuario.VerificarVazioOuNulo("O Id do usuário não foi informado", nameof(usuario));
+            usuario.HashSenha.VerificarVazioOuNulo("O hash da senha não foi informado", nameof(usuario));
+            usuario.Email.VerificarVazioOuNulo("O endereço de e-mail não foi informado", nameof(usuario));
+            usuario.HashChaveMestre.VerificarVazioOuNulo("O hash da chave mestre não foi informado", nameof(usuario));
 
             repositorio.Alterar(usuario);
         }
@@ -81,20 +105,15 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="usuario">O usuário que a senha será alterado.</param>
         /// <param name="senha">A nova senha do usuário.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="usuario"/> é nulo.</exception>
+        /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
         public virtual void AlterarSenha(TUsuario usuario, string senha)
         {
-            if (usuario is null)
-                throw new ArgumentNullException(nameof(usuario));
+            usuario.VerificarNulo(nameof(usuario));
+            senha.VerificarVazioOuNulo("A senha não foi informada", nameof(senha));
 
-            if (string.IsNullOrWhiteSpace(senha))
-                throw new InvalidOperationException("A senha não foi informada");
-
-            var hashSenha = provedorHash.GerarHash(senha);
-
-            var hashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{hashSenha}_{usuario.NomeUsuario}");
-
-            usuario.HashSenha = hashSenha;
-            usuario.HashChaveMestre = hashChaveMestre;
+            usuario.HashSenha = provedorHash.GerarHash(senha);
+            usuario.HashChaveMestre = GerarHashChaveMestre(usuario);
 
             Alterar(usuario);
         }
@@ -104,26 +123,18 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="usuario">Os dados do usuário que será criado.</param>
         /// <param name="senha">A nova senha do usuário.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="usuario"/> é nulo.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.NomeUsuario"/> de <paramref name="usuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><see cref="Usuario.Email"/> de <paramref name="usuario"/> não foi informado.</exception>
         public void Criar(TUsuario usuario, string senha)
         {
-            if (usuario is null)
-                throw new ArgumentNullException(nameof(usuario));
+            usuario.VerificarNulo(nameof(usuario));
+            usuario.Id.VerificarZeroOuNegativo("O Id do usuário não foi informado", nameof(usuario));
+            usuario.NomeUsuario.VerificarVazioOuNulo("O Id do usuário não foi informado", nameof(usuario));
+            usuario.Email.VerificarVazioOuNulo("O endereço de e-mail não foi informado", nameof(usuario));
 
-            if (string.IsNullOrWhiteSpace(usuario.NomeUsuario))
-                throw new InvalidOperationException("O nome de usuário não foi informado");
-
-            if (string.IsNullOrWhiteSpace(senha))
-                throw new InvalidOperationException("A senha não foi informada");
-
-            if (string.IsNullOrWhiteSpace(usuario.Email))
-                throw new InvalidOperationException("O endereço de e-mail não foi informado");
-
-            var hashSenha = provedorHash.GerarHash(senha);
-
-            var hashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{hashSenha}_{usuario.NomeUsuario}");
-
-            usuario.HashSenha = hashSenha;
-            usuario.HashChaveMestre = hashChaveMestre;
+            usuario.HashSenha = provedorHash.GerarHash(senha);
+            usuario.HashChaveMestre = GerarHashChaveMestre(usuario);
 
             repositorio.Criar(usuario);
         }
@@ -132,8 +143,11 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// Exclui um cadastro de usuário que correspondá ao Id especificado.
         /// </summary>
         /// <param name="id">O Id do cadastro do usuário que será excluído.</param>
+        /// <exception cref="ArgumentException"><paramref name="id"/> é zero ou negativo.</exception>
         public virtual void Excluir(long id)
         {
+            id.VerificarZeroOuNegativo("O Id do usuário não foi informado", nameof(id));
+
             repositorio.Excluir(id);
         }
 
@@ -142,31 +156,25 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="token">O token da autenticação atual.</param>
         /// <returns>O token da nova autenticação.</returns>
-        public virtual string NovaAutenticacao(string token)
+        public virtual string? NovaAutenticacao(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-                throw new InvalidOperationException("O token não é válido");
+            token.VerificarVazioOuNulo("O token não foi informado", nameof(token));
 
             if (VerificarAutenticacao(token))
             {
                 try
                 {
-                    var tokenDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
+                    var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
 
-                    var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenDescriptografado);
+                    var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
 
                     #nullable disable
-                    var novoTokenInstancia = new Token
-                    {
-                        NomeUsuario = tokenInstancia.NomeUsuario,
-                        LogadoEm = DateTime.UtcNow,
-                        ExpiraEm = DateTime.UtcNow.AddMinutes(15),
-                    };
+                    var novoTokenInstancia = CriarToken(tokenInstancia.NomeUsuario);
                     #nullable enable
 
-                    var novoToken = JsonSerializer.Serialize(novoTokenInstancia);
+                    var novoTokenJson = JsonSerializer.Serialize(novoTokenInstancia);
 
-                    return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, novoToken);
+                    return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, novoTokenJson);
                 }
                 catch (FormatException)
                 {
@@ -178,7 +186,7 @@ namespace WZSISTEMAS.Data.Autenticacao
                 }
             }
 
-            throw new InvalidOperationException("O token expirou");
+            throw new SecurityException("O token não é válido");
         }
 
         /// <summary>
@@ -187,25 +195,18 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
         /// <param name="senha">A senha do usuário ao ser autenticado.</param>
         /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns>
-        public virtual string Autenticar(string nomeUsuario, string senha)
+        /// <exception cref="ArgumentException"><paramref name="nomeUsuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
+        public virtual string? Autenticar(string nomeUsuario, string senha)
         {
-            if (string.IsNullOrWhiteSpace(nomeUsuario))
-                throw new InvalidOperationException("O nome de usuário não foi informado");
-
-            if (string.IsNullOrWhiteSpace(senha))
-                throw new InvalidOperationException("A senha não foi informada");
+            nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
+            senha.VerificarVazioOuNulo("A senha não foi informada", nameof(senha));
 
             var hashSenha = provedorHash.GerarHash(senha);
 
             if (repositorio.VerificarNomeUsuarioEHashSenha(nomeUsuario, hashSenha))
             {
-                var token = new Token
-                {
-                    NomeUsuario = nomeUsuario,
-                    LogadoEm = DateTime.UtcNow,
-                    ExpiraEm = DateTime.UtcNow.AddDays(15),
-                    HashChaveMestre = repositorio.ObterHashChaveMestre(nomeUsuario)
-                };
+                var token = CriarToken(nomeUsuario);
 
                 return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, JsonSerializer.Serialize(token));
             }
@@ -218,8 +219,11 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="id">O Id do cadastro de usuário que será retornado.</param>
         /// <returns>O cadastro do usuário que correspondá ao Id especificado, ou nulo se não existir.</returns>
+        /// <exception cref="ArgumentException"><paramref name="id"/> é zero ou negativo.</exception>
         public virtual TUsuario? ObterPorId(long id)
         {
+            id.VerificarZeroOuNegativo("O Id do usuário não foi informado", nameof(id));
+
             return repositorio.ObterPorId(id);
         }
 
@@ -237,10 +241,11 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="token">O token que será verificado se está autenticado.</param>
         /// <returns>Um valor <see cref="bool"/> representando se o token informado está autenticado.</returns>
+        /// <exception cref="ArgumentException"><paramref name="token"/> não foi informado.</exception>
+        /// <exception cref="SecurityException"><paramref name="token"/> não é válido.</exception>
         public virtual bool VerificarAutenticacao(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-                throw new SecurityException("O token não é válido");
+            token.VerificarVazioOuNulo("O token não foi informado", nameof(token));
 
             try
             {
