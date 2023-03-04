@@ -129,8 +129,8 @@ namespace WZSISTEMAS.Data.Autenticacao
         public void Criar(TUsuario usuario, string senha)
         {
             usuario.VerificarNulo(nameof(usuario));
-            usuario.Id.VerificarZeroOuNegativo("O Id do usuário não foi informado", nameof(usuario));
             usuario.NomeUsuario.VerificarVazioOuNulo("O Id do usuário não foi informado", nameof(usuario));
+            senha.VerificarVazioOuNulo("O endereço de e-mail não foi informado", nameof(senha));
             usuario.Email.VerificarVazioOuNulo("O endereço de e-mail não foi informado", nameof(usuario));
 
             usuario.HashSenha = provedorHash.GerarHash(senha);

@@ -42,7 +42,7 @@
         /// </summary>
         /// <param name="id">O Id do usuário que será obtido.</param>
         /// <returns>O nome de usuário de um usuário existente no repositório que correspondá ao Id informado.</returns>
-        string ObterNomeUsuarioPorId(long id);
+        string? ObterNomeUsuarioPorId(long id);
 
         /// <summary>
         /// Verifica se o hash da senha informado corresponde ao hash da senha do usuário com o nome de usuário informado.
@@ -70,7 +70,7 @@
         /// </summary>
         /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
         /// <returns></returns>
-        string ObterHashChaveMestre(string nomeUsuario);
+        string? ObterHashChaveMestre(string nomeUsuario);
 
         /// <summary>
         /// Verifica se o hash da chave mestre informado corresponde ao hash da chave mestre do usuário existe no repositório que corresponda ao nome de usuário informado.
