@@ -55,6 +55,20 @@
         TUsuario? ObterPorId(long id);
 
         /// <summary>
+        /// Obtém um cadastro de usuário que correspondá ao token de autenticação.
+        /// </summary>
+        /// <param name="token">O token de autenticação do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário que correspondá ao token de autenticaçã.</returns>
+        TUsuario? ObterPorToken(string token);
+
+        /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao nome de usuário especificado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao nome de usuário especificado.</returns>
+        TUsuario? ObterPorNomeUsuario(string nomeUsuario);
+
+        /// <summary>
         /// Obtém todos os cadastros dos usuários existem em uma lista simplicada contendo o Id, nome de usuário e e-mail.
         /// </summary>
         /// <returns>Todos os cadastros dos usuários existem em uma lista simplicada contendo o Id, nome de usuário e e-mail.</returns>

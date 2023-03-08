@@ -282,5 +282,49 @@ namespace WZSISTEMAS.Data.Autenticacao
         {
             return repositorio.VerificarUsuarioExiste();
         }
+
+        /// <summary>
+        /// Obtém um cadastro de usuário que correspondá ao token de autenticação.
+        /// </summary>
+        /// <param name="token">O token de autenticação do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário que correspondá ao token de autenticaçã.</returns>
+        public TUsuario? ObterPorToken(string token)
+        {
+            token.VerificarVazioOuNulo("O token não foi informado", nameof(token));
+
+            if (VerificarAutenticacao(token))
+            {
+                try
+                {
+                    var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
+
+                    var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
+
+                    #nullable disable
+                    return repositorio.ObterPorNomeUsuario(tokenInstancia.NomeUsuario);
+                    #nullable enable        
+                }
+                catch (FormatException)
+                {
+                    throw new SecurityException("O token não é válido");
+                }
+                catch (JsonException)
+                {
+                    throw new SecurityException("O token não é válido");
+                }
+            }
+
+            throw new SecurityException("O token não é válido");
+        }
+
+        /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao nome de usuário especificado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao nome de usuário especificado.</returns>
+        public TUsuario? ObterPorNomeUsuario(string nomeUsuario)
+        {
+            return repositorio.ObterPorNomeUsuario(nomeUsuario);
+        }
     }
 }

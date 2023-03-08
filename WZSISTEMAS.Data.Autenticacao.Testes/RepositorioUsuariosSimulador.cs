@@ -131,5 +131,10 @@
         {
             return Usuarios.Any();
         }
+
+        public Usuario? ObterPorNomeUsuario(string nomeUsuario)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

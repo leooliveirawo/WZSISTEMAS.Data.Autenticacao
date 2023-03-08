@@ -32,6 +32,13 @@
         TUsuario? ObterPorId(long id);
 
         /// <summary>
+        /// Obtém um usuário existente no repositório que correspondá ao nome de usuário especificado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário que será obtido.</param>
+        /// <returns>O usuário existente no repositório que correspondá ao nome de usuário especificado.</returns>
+        TUsuario? ObterPorNomeUsuario(string nomeUsuario);
+
+        /// <summary>
         /// Obtém todos os usuários existentes no repositório.
         /// </summary>
         /// <returns>Todos os usuários existentes no repositório.</returns>
