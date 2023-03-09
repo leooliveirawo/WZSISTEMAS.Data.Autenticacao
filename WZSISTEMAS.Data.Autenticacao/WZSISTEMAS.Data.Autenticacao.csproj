@@ -12,7 +12,7 @@
 		<RepositoryUrl>https://github.com/leooliveirawo/WZSISTEMAS.Data.Autenticacao</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>autenticação, authentication</PackageTags>
-		<Version>1.0.3</Version>
+		<Version>1.0.3.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
