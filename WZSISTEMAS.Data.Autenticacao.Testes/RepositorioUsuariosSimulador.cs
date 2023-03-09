@@ -8,7 +8,7 @@
         public RepositorioUsuariosSimulador()
         {
             Usuarios = new List<Usuario>();
-            identityId = 1;
+            identityId = 0;
         }
 
         private void VerificarRequisitosFontesDados(Usuario usuario)
@@ -134,7 +134,7 @@
 
         public Usuario? ObterPorNomeUsuario(string nomeUsuario)
         {
-            throw new NotImplementedException();
+            return Usuarios.FirstOrDefault(x => x.NomeUsuario == nomeUsuario);
         }
     }
 }

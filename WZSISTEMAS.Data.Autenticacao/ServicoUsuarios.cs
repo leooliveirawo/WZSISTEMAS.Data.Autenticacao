@@ -162,31 +162,20 @@ namespace WZSISTEMAS.Data.Autenticacao
 
             if (VerificarAutenticacao(token))
             {
-                try
-                {
-                    var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
+                var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
 
-                    var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
+                var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
 
-                    #nullable disable
-                    var novoTokenInstancia = CriarToken(tokenInstancia.NomeUsuario);
-                    #nullable enable
+                #nullable disable
+                var novoTokenInstancia = CriarToken(tokenInstancia.NomeUsuario);
+                #nullable enable
 
-                    var novoTokenJson = JsonSerializer.Serialize(novoTokenInstancia);
+                var novoTokenJson = JsonSerializer.Serialize(novoTokenInstancia);
 
-                    return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, novoTokenJson);
-                }
-                catch (FormatException)
-                {
-                    throw new SecurityException("O token não é válido");
-                }
-                catch (JsonException)
-                {
-                    throw new SecurityException("O token não é válido");
-                }
+                return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, novoTokenJson);
             }
 
-            throw new SecurityException("O token não é válido");
+            return default;
         }
 
         /// <summary>
@@ -211,7 +200,7 @@ namespace WZSISTEMAS.Data.Autenticacao
                 return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, JsonSerializer.Serialize(token));
             }
 
-            throw new SecurityException("O nome de usuário e senha não são válidos");
+            return null;
         }
 
         /// <summary>
@@ -242,7 +231,6 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// <param name="token">O token que será verificado se está autenticado.</param>
         /// <returns>Um valor <see cref="bool"/> representando se o token informado está autenticado.</returns>
         /// <exception cref="ArgumentException"><paramref name="token"/> não foi informado.</exception>
-        /// <exception cref="SecurityException"><paramref name="token"/> não é válido.</exception>
         public virtual bool VerificarAutenticacao(string token)
         {
             token.VerificarVazioOuNulo("O token não foi informado", nameof(token));
@@ -254,7 +242,7 @@ namespace WZSISTEMAS.Data.Autenticacao
                 var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenDescriptografado);
 
                 if (tokenInstancia is null)
-                    throw new SecurityException("O token não é válido");
+                    return false;
 
                 if (tokenInstancia.ExpiraEm < DateTime.Now)
                     return false;
@@ -266,11 +254,11 @@ namespace WZSISTEMAS.Data.Autenticacao
             }
             catch (FormatException)
             {
-                throw new SecurityException("O token não é válido");
+                return false;
             }
             catch (JsonException)
             {
-                throw new SecurityException("O token não é válido");
+                return false;
             }
         }
 
@@ -294,27 +282,16 @@ namespace WZSISTEMAS.Data.Autenticacao
 
             if (VerificarAutenticacao(token))
             {
-                try
-                {
-                    var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
+                var tokenJsonDescriptografado = provedorCriptografia.Descriptografar(dadosCriptografia.Chave, dadosCriptografia.IV, token);
 
-                    var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
+                var tokenInstancia = JsonSerializer.Deserialize<Token>(tokenJsonDescriptografado);
 
-                    #nullable disable
-                    return repositorio.ObterPorNomeUsuario(tokenInstancia.NomeUsuario);
-                    #nullable enable        
-                }
-                catch (FormatException)
-                {
-                    throw new SecurityException("O token não é válido");
-                }
-                catch (JsonException)
-                {
-                    throw new SecurityException("O token não é válido");
-                }
+                #nullable disable
+                return repositorio.ObterPorNomeUsuario(tokenInstancia.NomeUsuario);
+                #nullable enable
             }
 
-            throw new SecurityException("O token não é válido");
+            return default;
         }
 
         /// <summary>
@@ -324,6 +301,8 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// <returns>O cadastro de usuário existente que correspondá ao nome de usuário especificado.</returns>
         public TUsuario? ObterPorNomeUsuario(string nomeUsuario)
         {
+            nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
+
             return repositorio.ObterPorNomeUsuario(nomeUsuario);
         }
     }

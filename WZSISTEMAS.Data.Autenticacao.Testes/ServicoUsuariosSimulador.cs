@@ -8,6 +8,11 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
         {
         }
 
+        public new Token CriarToken(string nomeUsuario)
+        {
+            return base.CriarToken(nomeUsuario);
+        }
+
         public new string GerarHashChaveMestre(Usuario usuario)
         {
             return base.GerarHashChaveMestre(usuario);
