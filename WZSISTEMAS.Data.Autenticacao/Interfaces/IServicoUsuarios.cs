@@ -86,5 +86,19 @@
         /// <param name="token">O token que será verificado se está autenticado.</param>
         /// <returns>Um valor <see cref="bool"/> representando se o token informado está autenticado.</returns>
         bool VerificarAutenticacao(string token);
+
+        /// <summary>
+        /// Verifica se o nome de usuário informado está sendo utilizado por algum usuário existente.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o nome de usuário informado está sendo utilizado por algum usuário existente.</returns>
+        bool VerificarNomeUsuarioUsado(string nomeUsuario);
+
+        /// <summary>
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente.</returns>
+        bool VerificarEmailUsado(string email);
     }
 }

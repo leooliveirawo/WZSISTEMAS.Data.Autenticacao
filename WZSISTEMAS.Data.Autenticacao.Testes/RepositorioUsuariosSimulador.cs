@@ -136,5 +136,10 @@
         {
             return Usuarios.FirstOrDefault(x => x.NomeUsuario == nomeUsuario);
         }
+
+        public bool VerificarEmailUsado(string email)
+        {
+            return Usuarios.Any(x => x.Email == email);
+        }
     }
 }

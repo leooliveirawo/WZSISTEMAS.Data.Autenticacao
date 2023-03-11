@@ -86,5 +86,12 @@
         /// <param name="hashChaveMestre">O hash da chave mestre.</param>
         /// <returns>Um valor <see cref="bool"/> se o hash da chave mestre informado corresponde ao hash da chave mestre do usuário existe no repositório que corresponda ao nome de usuário informado.</returns>
         bool VerificarHashChaveMestre(string nomeUsuario, string hashChaveMestre);
+
+        /// <summary>
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente.</returns>
+        bool VerificarEmailUsado(string email);
     }
 }
