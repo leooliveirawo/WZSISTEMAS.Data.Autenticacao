@@ -141,5 +141,15 @@
         {
             return Usuarios.Any(x => x.Email == email);
         }
+
+        public bool VerificarNomeUsuarioUsado(string nomeUsuario, long idIgnorado)
+        {
+            return Usuarios.Any(x => x.NomeUsuario == nomeUsuario && x.Id != idIgnorado);
+        }
+
+        public bool VerificarEmailUsado(string email, long idIgnorado)
+        {
+            return Usuarios.Any(x => x.Email == email && x.Id != idIgnorado);
+        }
     }
 }

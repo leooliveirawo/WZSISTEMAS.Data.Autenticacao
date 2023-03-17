@@ -56,7 +56,7 @@
         /// </summary>
         /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
         /// <param name="hashSenha">O hash da senha que será comparado ao hash da senha do usuário.</param>
-        /// <returns></returns>
+        /// <returns>Um valor <see cref="bool"/> representando se o hash da senha informado corresponde ao hash da senha do usuário com o nome de usuário informado.</returns>
         bool VerificarNomeUsuarioEHashSenha(string nomeUsuario, string hashSenha);
 
         /// <summary>
@@ -73,10 +73,18 @@
         bool VerificarNomeUsuarioUsado(string nomeUsuario);
 
         /// <summary>
+        /// Verifica se o nome de usuário informado está sendo utilizado por algum usuário existente no repositório que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o nome de usuário informado está sendo utilizado por algum usuário existente no repositório  que não correspondá ao Id informado.</returns>
+        bool VerificarNomeUsuarioUsado(string nomeUsuario, long idIgnorado);
+
+        /// <summary>
         /// Obtém o hash da chave mestre do usuário que correspondá ao nome de usuário informado.
         /// </summary>
         /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
-        /// <returns></returns>
+        /// <returns>O hash da chave mestre do usuário que correspondá ao nome de usuário informado.</returns>
         string? ObterHashChaveMestre(string nomeUsuario);
 
         /// <summary>
@@ -88,10 +96,18 @@
         bool VerificarHashChaveMestre(string nomeUsuario, string hashChaveMestre);
 
         /// <summary>
-        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente.
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente no repositório.
         /// </summary>
         /// <param name="email">O e-mail do usuário.</param>
-        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente.</returns>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente no repositório.</returns>
         bool VerificarEmailUsado(string email);
+
+        /// <summary>
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente no repositório que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente no repositório  que não correspondá ao Id informado.</returns>
+        bool VerificarEmailUsado(string email, long idIgnorado);
     }
 }

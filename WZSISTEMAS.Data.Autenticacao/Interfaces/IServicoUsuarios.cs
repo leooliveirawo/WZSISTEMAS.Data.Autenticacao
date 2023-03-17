@@ -95,10 +95,26 @@
         bool VerificarNomeUsuarioUsado(string nomeUsuario);
 
         /// <summary>
+        /// Verifica se o nome de usuário informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o nome de usuário informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.</returns>
+        bool VerificarNomeUsuarioUsado(string nomeUsuario, long idIgnorado);
+
+        /// <summary>
         /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente.
         /// </summary>
         /// <param name="email">O e-mail do usuário.</param>
         /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente.</returns>
         bool VerificarEmailUsado(string email);
+
+        /// <summary>
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.</returns>
+        bool VerificarEmailUsado(string email, long idIgnorado);
     }
 }

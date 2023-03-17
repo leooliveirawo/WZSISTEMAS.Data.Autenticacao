@@ -313,7 +313,7 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// <returns>Um valor <see cref="bool"/> que representa se o nome de usuário informado está sendo utilizado por algum usuário existente.</returns>
         public virtual bool VerificarNomeUsuarioUsado(string nomeUsuario)
         {
-            nomeUsuario.VerificarVazioOuNulo("O e-mail não foi informado", nameof(nomeUsuario));
+            nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
 
             return repositorio.VerificarNomeUsuarioUsado(nomeUsuario);
         }
@@ -328,6 +328,32 @@ namespace WZSISTEMAS.Data.Autenticacao
             email.VerificarVazioOuNulo("O e-mail não foi informado", nameof(email));
 
             return repositorio.VerificarEmailUsado(email);
+        }
+
+        /// <summary>
+        /// Verifica se o nome de usuário informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o nome de usuário informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.</returns>
+        public bool VerificarNomeUsuarioUsado(string nomeUsuario, long idIgnorado)
+        {
+            nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
+
+            return repositorio.VerificarNomeUsuarioUsado(nomeUsuario, idIgnorado);
+        }
+
+        /// <summary>
+        /// Verifica se o e-mail informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <param name="idIgnorado">O Id do usuário ignorado.</param>
+        /// <returns>Um valor <see cref="bool"/> que representa se o e-mail informado está sendo utilizado por algum usuário existente que não correspondá ao Id informado.</returns>
+        public bool VerificarEmailUsado(string email, long idIgnorado)
+        {
+            email.VerificarVazioOuNulo("O e-mail não foi informado", nameof(email));
+
+            return repositorio.VerificarEmailUsado(email, idIgnorado);
         }
     }
 }
