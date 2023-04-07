@@ -18,7 +18,7 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 Email = "teste1@teste1.com",
             }, "teste1");
 
-            var token = servico.Autenticar("teste1", "teste1");
+            var token = servico.AutenticarPeloNomeUsuario("teste1", "teste1");
 
             Assert.IsNotNull(servico.ObterPorToken(token));
         }

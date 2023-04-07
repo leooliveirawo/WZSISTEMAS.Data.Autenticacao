@@ -74,7 +74,7 @@ namespace WZSISTEMAS.Data.Autenticacao
                 NomeUsuario = nomeUsuario,
                 LogadoEm = DateTime.UtcNow,
                 ExpiraEm = DateTime.UtcNow.AddMinutes(15),
-                HashChaveMestre = repositorio.ObterHashChaveMestre(nomeUsuario)
+                HashChaveMestre = repositorio.ObterHashChaveMestre(nomeUsuario) ?? throw new InvalidOperationException("Nenhum hash da chave mestre que correpondá ao nome de usuário foi encontrado")
             };
         }
 
@@ -183,10 +183,24 @@ namespace WZSISTEMAS.Data.Autenticacao
         /// </summary>
         /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
         /// <param name="senha">A senha do usuário ao ser autenticado.</param>
-        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucedido.</returns>
         /// <exception cref="ArgumentException"><paramref name="nomeUsuario"/> não foi informado.</exception>
         /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
+        [Obsolete($"Utilize o método {nameof(IServicoUsuarios<TUsuario>.AutenticarPeloNomeUsuario)}")]
         public virtual string? Autenticar(string nomeUsuario, string senha)
+        {
+            return AutenticarPeloNomeUsuario(nomeUsuario, senha);
+        }
+
+        /// <summary>
+        /// Realiza uma autenticação se o nome de usuário e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucedido.</returns>
+        /// <exception cref="ArgumentException"><paramref name="nomeUsuario"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
+        public virtual string? AutenticarPeloNomeUsuario(string nomeUsuario, string senha)
         {
             nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
             senha.VerificarVazioOuNulo("A senha não foi informada", nameof(senha));
@@ -196,6 +210,60 @@ namespace WZSISTEMAS.Data.Autenticacao
             if (repositorio.VerificarNomeUsuarioEHashSenha(nomeUsuario, hashSenha))
             {
                 var token = CriarToken(nomeUsuario);
+
+                return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, JsonSerializer.Serialize(token));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Realiza uma autenticação se o e-mail e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucedido.</returns>
+        /// <exception cref="ArgumentException"><paramref name="email"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
+        public virtual string? AutenticarPeloEmail(string email, string senha)
+        {
+            email.VerificarVazioOuNulo("O e-mail não foi informado", nameof(email));
+            senha.VerificarVazioOuNulo("A senha não foi informada", nameof(senha));
+
+            var hashSenha = provedorHash.GerarHash(senha);
+
+            if (repositorio.VerificarEmailEHashSenha(email, hashSenha))
+            {
+                var usuario = repositorio.ObterPorEmail(email) ?? throw new InvalidOperationException("O usuário não foi encontrado");
+
+                var token = CriarToken(usuario.NomeUsuario);
+
+                return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, JsonSerializer.Serialize(token));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Realiza uma autenticação se o nome de usuário ou e-mail e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="nomeUsuarioOuEmail">O nome de usuário ou e-mail do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucedido.</returns>
+        /// <exception cref="ArgumentException"><paramref name="nomeUsuarioOuEmail"/> não foi informado.</exception>
+        /// <exception cref="ArgumentException"><paramref name="senha"/> não foi informado.</exception>
+        public virtual string? AutenticarPeloNomeUsuarioOuEmail(string nomeUsuarioOuEmail, string senha)
+        {
+            nomeUsuarioOuEmail.VerificarVazioOuNulo("O nome de usuário ou e-mail não foi informado", nameof(nomeUsuarioOuEmail));
+            senha.VerificarVazioOuNulo("A senha não foi informada", nameof(senha));
+
+            var hashSenha = provedorHash.GerarHash(senha);
+
+            if (repositorio.VerificarNomeUsuarioOuEmailEHashSenha(nomeUsuarioOuEmail, hashSenha))
+            {
+                var usuario = repositorio.ObterPorNomeUsuarioOuEmail(nomeUsuarioOuEmail) ?? throw new InvalidOperationException("O usuário não foi encontrado");
+
+                var token = CriarToken(usuario.NomeUsuario);
 
                 return provedorCriptografia.Criptografar(dadosCriptografia.Chave, dadosCriptografia.IV, JsonSerializer.Serialize(token));
             }
@@ -304,6 +372,18 @@ namespace WZSISTEMAS.Data.Autenticacao
             nomeUsuario.VerificarVazioOuNulo("O nome de usuário não foi informado", nameof(nomeUsuario));
 
             return repositorio.ObterPorNomeUsuario(nomeUsuario);
+        }
+
+        /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao e-mail especificado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao e-mail especificado.</returns>
+        public virtual TUsuario? ObterPorEmail(string email)
+        {
+            email.VerificarVazioOuNulo("O e-mail não foi informado", nameof(email));
+
+            return repositorio.ObterPorEmail(email);
         }
 
         /// <summary>

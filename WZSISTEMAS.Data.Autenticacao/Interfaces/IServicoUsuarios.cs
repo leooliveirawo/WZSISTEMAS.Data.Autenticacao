@@ -44,8 +44,33 @@
         /// </summary>
         /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
         /// <param name="senha">A senha do usuário ao ser autenticado.</param>
-        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns> 
+        [Obsolete($"Utilize o método {nameof(IServicoUsuarios<TUsuario>.AutenticarPeloNomeUsuario)}", error: true)]
         string? Autenticar(string nomeUsuario, string senha);
+
+        /// <summary>
+        /// Realiza uma autenticação se o nome de usuário e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="nomeUsuario">O nome de usuário do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns> 
+        string? AutenticarPeloNomeUsuario(string nomeUsuario, string senha);
+
+        /// <summary>
+        /// Realiza uma autenticação se o e-mail e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns> 
+        string? AutenticarPeloEmail(string email, string senha);
+
+        /// <summary>
+        /// Realiza uma autenticação se o nome de usuário ou e-mail e a senha estiverem corretos.
+        /// </summary>
+        /// <param name="nomeUsuarioOuEmail">O nome de usuário ou e-mail do usuário ao ser autenticação.</param>
+        /// <param name="senha">A senha do usuário ao ser autenticado.</param>
+        /// <returns>O token da autenticação ou nulo se a autenticação não for bem sucessidade.</returns> 
+        string? AutenticarPeloNomeUsuarioOuEmail(string nomeUsuarioOuEmail, string senha);
 
         /// <summary>
         /// Obtém um cadastro do usuário que correspondá ao Id especificado, ou nulo se não existir.
@@ -67,6 +92,13 @@
         /// <param name="nomeUsuario">O nome de usuário do usuário que será obtido.</param>
         /// <returns>O cadastro de usuário existente que correspondá ao nome de usuário especificado.</returns>
         TUsuario? ObterPorNomeUsuario(string nomeUsuario);
+
+        /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao e-mail especificado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao e-mail especificado.</returns>
+        TUsuario? ObterPorEmail(string email);
 
         /// <summary>
         /// Obtém todos os cadastros dos usuários existem em uma lista simplicada contendo o Id, nome de usuário e e-mail.

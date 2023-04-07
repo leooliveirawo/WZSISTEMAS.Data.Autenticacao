@@ -122,6 +122,16 @@
             return Usuarios.Any(x => x.NomeUsuario == nomeUsuario && x.HashSenha == hashSenha);
         }
 
+        public bool VerificarNomeUsuarioOuEmailEHashSenha(string nomeUsuarioOuEmail, string hashSenha)
+        {
+            return Usuarios.Any(x => (x.NomeUsuario == nomeUsuarioOuEmail || x.Email == nomeUsuarioOuEmail) && x.HashSenha == hashSenha);
+        }
+
+        public bool VerificarEmailEHashSenha(string email, string hashSenha)
+        {
+            return Usuarios.Any(x => x.Email == email && x.HashSenha == hashSenha);
+        }
+
         public bool VerificarNomeUsuarioUsado(string nomeUsuario)
         {
             return Usuarios.Any(x => x.NomeUsuario == nomeUsuario);
@@ -135,6 +145,16 @@
         public Usuario? ObterPorNomeUsuario(string nomeUsuario)
         {
             return Usuarios.FirstOrDefault(x => x.NomeUsuario == nomeUsuario);
+        }
+
+        public Usuario? ObterPorEmail(string email)
+        {
+            return Usuarios.FirstOrDefault(x => x.Email == email);
+        }
+
+        public Usuario? ObterPorNomeUsuarioOuEmail(string nomeUsuarioOuEmail)
+        {
+            return Usuarios.FirstOrDefault(x => x.NomeUsuario == nomeUsuarioOuEmail || x.Email == nomeUsuarioOuEmail);
         }
 
         public bool VerificarEmailUsado(string email)

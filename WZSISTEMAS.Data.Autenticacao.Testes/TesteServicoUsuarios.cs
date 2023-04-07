@@ -10,7 +10,7 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
     [TestClass]
     public partial class TesteServicoUsuarios
     {
-        private ServicoUsuariosSimulador CriarServicoUsuariosSemTeste()
+        private static ServicoUsuariosSimulador CriarServicoUsuariosSemTeste()
         {
             return new ServicoUsuariosSimulador(
                 new RepositorioUsuariosSimulador(),
@@ -44,7 +44,6 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 NomeUsuario = "teste4",
                 Email = "teste4@teste4.com"
             }, "teste4");
-
         }
 
         [TestMethod]

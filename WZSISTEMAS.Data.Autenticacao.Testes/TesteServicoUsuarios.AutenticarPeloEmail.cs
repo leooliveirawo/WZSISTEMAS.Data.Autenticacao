@@ -1,13 +1,11 @@
 ﻿#nullable disable
 
-using System.Security;
-
 namespace WZSISTEMAS.Data.Autenticacao.Testes
 {
     public partial class TesteServicoUsuarios
     {
         [TestMethod]
-        public void Autenticar()
+        public void AutenticarPeloEmail()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -28,14 +26,14 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            var token = servico.Autenticar("teste1", "teste1");
+            var token = servico.AutenticarPeloEmail("teste1@teste1.com", "teste1");
 
             Assert.IsNotNull(token);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), AllowDerivedTypes = false)]
-        public void Autenticar_NomeUsuario_Nulo()
+        public void AutenticarPeloEmail_Email_Nulo()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -56,12 +54,12 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            Assert.IsNull(servico.Autenticar(default, "teste1"));
+            Assert.IsNull(servico.AutenticarPeloEmail(default, "teste1"));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), AllowDerivedTypes = false)]
-        public void Autenticar_NomeUsuario_Vazio()
+        public void AutenticarPeloEmail_Email_Vazio()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -82,11 +80,11 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            Assert.IsNull(servico.Autenticar(string.Empty, "teste1"));
+            Assert.IsNull(servico.AutenticarPeloEmail(string.Empty, "teste1"));
         }
 
         [TestMethod]
-        public void Autenticar_NomeUsuario_Invalido()
+        public void AutenticarPeloEmail_Email_Invalido()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -107,38 +105,12 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            Assert.IsNull(servico.Autenticar("teste2", "teste1"));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException), AllowDerivedTypes = false)]
-        public void Autenticar_Senha_Nulo()
-        {
-            var repositorio = new RepositorioUsuariosSimulador();
-            var provedorHash = new ProvedorHashSimulador();
-            var provedorCriptografia = new ProvedorCriptografaSimulador();
-            var dadosCriptografia = new DadosCriptografiaSimulador("1", "1");
-
-            var servico = new ServicoUsuariosSimulador(
-                repositorio,
-                provedorHash,
-                provedorCriptografia,
-                dadosCriptografia);
-
-            repositorio.Criar(new Usuario
-            {
-                NomeUsuario = "teste1",
-                Email = "teste1@teste1.com",
-                HashSenha = provedorHash.GerarHash("teste1"),
-                HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
-            });
-
-            Assert.IsNull(servico.Autenticar("teste1", default));
+            Assert.IsNull(servico.AutenticarPeloEmail("teste2@teste1.com", "teste1"));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), AllowDerivedTypes = false)]
-        public void Autenticar_Senha_Vazio()
+        public void AutenticarPeloEmail_Senha_Nulo()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -159,11 +131,12 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            Assert.IsNull(servico.Autenticar("teste1", string.Empty));
+            Assert.IsNull(servico.AutenticarPeloEmail("teste1", default));
         }
 
         [TestMethod]
-        public void Autenticar_Senha_Invalida()
+        [ExpectedException(typeof(ArgumentException), AllowDerivedTypes = false)]
+        public void AutenticarPeloEmail_Senha_Vazio()
         {
             var repositorio = new RepositorioUsuariosSimulador();
             var provedorHash = new ProvedorHashSimulador();
@@ -184,7 +157,32 @@ namespace WZSISTEMAS.Data.Autenticacao.Testes
                 HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
             });
 
-            Assert.IsNull(servico.Autenticar("teste1", "teste2"));
+            Assert.IsNull(servico.AutenticarPeloEmail("teste1@teste1.com", string.Empty));
+        }
+
+        [TestMethod]
+        public void AutenticarPeloEmail_Senha_Invalida()
+        {
+            var repositorio = new RepositorioUsuariosSimulador();
+            var provedorHash = new ProvedorHashSimulador();
+            var provedorCriptografia = new ProvedorCriptografaSimulador();
+            var dadosCriptografia = new DadosCriptografiaSimulador("1", "1");
+
+            var servico = new ServicoUsuariosSimulador(
+                repositorio,
+                provedorHash,
+                provedorCriptografia,
+                dadosCriptografia);
+
+            repositorio.Criar(new Usuario
+            {
+                NomeUsuario = "teste1",
+                Email = "teste1@teste1.com",
+                HashSenha = provedorHash.GerarHash("teste1"),
+                HashChaveMestre = provedorHash.GerarHash($"{DateTime.UtcNow}_{provedorHash.GerarHash("teste1")}_{"teste1"}")
+            });
+
+            Assert.IsNull(servico.AutenticarPeloEmail("teste1@teste1.com", "teste2"));
         }
     }
 }

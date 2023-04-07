@@ -39,6 +39,20 @@
         TUsuario? ObterPorNomeUsuario(string nomeUsuario);
 
         /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao e-mail especificado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao e-mail especificado.</returns>
+        TUsuario? ObterPorEmail(string email);
+
+        /// <summary>
+        /// Obtém um cadastro de usuário existente que correspondá ao nome de usuário ou e-mail especificado.
+        /// </summary>
+        /// <param name="nomeUsuarioOuEmail">O nome de usuário ou e-mail do usuário que será obtido.</param>
+        /// <returns>O cadastro de usuário existente que correspondá ao nome de usuário ou e-mail especificado.</returns>
+        TUsuario? ObterPorNomeUsuarioOuEmail(string nomeUsuarioOuEmail);
+
+        /// <summary>
         /// Obtém todos os usuários existentes no repositório.
         /// </summary>
         /// <returns>Todos os usuários existentes no repositório.</returns>
@@ -58,6 +72,22 @@
         /// <param name="hashSenha">O hash da senha que será comparado ao hash da senha do usuário.</param>
         /// <returns>Um valor <see cref="bool"/> representando se o hash da senha informado corresponde ao hash da senha do usuário com o nome de usuário informado.</returns>
         bool VerificarNomeUsuarioEHashSenha(string nomeUsuario, string hashSenha);
+
+        /// <summary>
+        /// Verifica se o hash da senha informado corresponde ao hash da senha do usuário com o e-mail informado.
+        /// </summary>
+        /// <param name="email">O e-mail do usuário.</param>
+        /// <param name="hashSenha">O hash da senha que será comparado ao hash da senha do usuário.</param>
+        /// <returns>Um valor <see cref="bool"/> representando se o hash da senha informado corresponde ao hash da senha do usuário com o e-mail informado.</returns>
+        bool VerificarEmailEHashSenha(string email, string hashSenha);
+
+        /// <summary>
+        /// Verifica se o hash da senha informado corresponde ao hash da senha do usuário com o nome de usuário ou e-mail informado.
+        /// </summary>
+        /// <param name="nomeUsuarioOuEmail">O nome de usuário ou e-mail do usuário.</param>
+        /// <param name="hashSenha">O hash da senha que será comparado ao hash da senha do usuário.</param>
+        /// <returns>Um valor <see cref="bool"/> representando se o hash da senha informado corresponde ao hash da senha do usuário com o nome de usuário ou e-mail informado.</returns>
+        bool VerificarNomeUsuarioOuEmailEHashSenha(string nomeUsuarioOuEmail, string hashSenha);
 
         /// <summary>
         /// Verifica se existem usuários no repositório.
